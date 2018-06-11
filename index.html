@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Resize Image</title>
+</head>
+
+<body>
+    <h1>Resize an Image</h1>
+
+    <div>
+        <input id="imageFile" type="file">
+        <input type="button" value="Resize Image" onclick="ResizeImage()" />
+        <img src="" id="output">
+    </div>
+
+    <script>
+        function ResizeImage() {
+            var filesToUpload = document.getElementById('imageFile').files;
+            var file = filesToUpload[0];
+
+            // Create an image
+            var img = document.createElement("img");
+            // Create a file reader
+            var reader = new FileReader();
+            // Set the image once loaded into file reader
+            reader.onload = function (e) {
+                img.src = e.target.result;
+
+                var canvas = document.createElement("canvas");
+                //var canvas = $("<canvas>", {"id":"testing"})[0];
+                var ctx = canvas.getContext("2d");
+                ctx.drawImage(img, 0, 0);
+
+                // If width is greater than the height, width  = 400; if height is greater than the width, height = 400;
+
+                var MAX_WIDTH = 400;
+                var MAX_HEIGHT = 400;
+                var width = img.width; //1280
+                var height = img.height; //720
+                
+                // 1280 mayor 720   
+                // height = 720*400/1280; 225
+                // width = 400;
+
+                // width = 400
+                // height = 500
+                // new wdth = 80*4/1; = 320;
+                // new height = 400; 
+
+                if (width > height) {
+                    if (width > MAX_WIDTH) {
+                        height *= MAX_WIDTH / width;
+                        width = MAX_WIDTH;
+                    }
+                } else {
+                    if (height > MAX_HEIGHT) {
+                        width *= MAX_HEIGHT / height;
+                        height = MAX_HEIGHT;
+                    }
+                }
+                canvas.width = width;
+                canvas.height = height;
+                var ctx = canvas.getContext("2d");
+                ctx.drawImage(img, 0, 0, width, height);
+
+                var dataurl = canvas.toDataURL("image/png");
+                document.getElementById('output').src = dataurl;
+                console.log(dataurl);
+            }
+            // Load files into file reader
+            reader.readAsDataURL(file);
+        }
+
+        //https://jsfiddle.net/codeandcloud/xor3L8db/
+
+    </script>
+</body>
+
+</html>
